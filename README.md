@@ -44,6 +44,25 @@ Trong đó, chỉ cần một input là domain muốn thực hiện mã hóa bod
 7. Gán lại body rồi forward request đi và nhận response.
 
 ### TODO
-- Thêm operator để detect request đến từ Repeater Tab mục đích giảm nhẹ việc phải đổi requestId và tính lại hash cho tất cả các request đi qua Proxy Tab. 
+- Thêm operator để detect request đến từ Repeater Tab mục đích giảm nhẹ việc phải đổi requestId và tính lại hash cho tất cả các request đi qua Proxy Tab.
+![img.png](media/vjapi/detect_repeater.png)
+
+Bằng cách custom lại hàm `burp.CstcHttpHandler#handleHttpRequestToBeSent()` thực hiện add thêm header `X-Repeater` nếu request được send từ `Repeater Tool`
+
+```java
+public RequestToBeSentAction handleHttpRequestToBeSent(HttpRequestToBeSent requestToBeSent) {
+        // ...
+
+        // If request from repeater tab will be add X-Repeater header
+        if(requestToBeSent.toolSource().isFromTool(ToolType.REPEATER)) {
+            HttpRequest requestMofied = requestToBeSent.withAddedHeader("X-Repeater", "true");
+            ByteArray request = requestMofied.toByteArray();
+            ByteArray modifiedRequest = view.getOutgoingRecipePanel().bake(request, null);
+            return continueWith(HttpRequest.httpRequest(modifiedRequest).withService(requestToBeSent.httpService()));
+        }
+
+        // ...
+    }
+```
 
 ### }

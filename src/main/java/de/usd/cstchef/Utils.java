@@ -27,10 +27,7 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
 
-import de.usd.cstchef.operations.vietjetair.BodyEncryptor;
-import de.usd.cstchef.operations.vietjetair.CalculateHashRequest;
-import de.usd.cstchef.operations.vietjetair.ReqIdGenerator;
-import de.usd.cstchef.operations.vietjetair.SkipOosRequest;
+import de.usd.cstchef.operations.vietjetair.*;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -417,7 +414,7 @@ public class Utils {
                 UnixTimestamp.class, UrlDecode.class, UrlEncode.class, Uppercase.class, UnconditionalJump.class, Unzip.class,
                 Whirlpool.class, WriteFile.class,
                 XmlFullSignature.class, XmlMultiSignature.class, Xor.class, XmlSetter.class, Zip.class,
-                BodyEncryptor.class, ReqIdGenerator.class, CalculateHashRequest.class, SkipOosRequest.class
+                BodyEncryptor.class, ReqIdGenerator.class, CalculateHashRequest.class, SkipOosRequest.class, IsRequestFromRepeater.class
         };
     }
 

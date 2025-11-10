@@ -16,8 +16,9 @@ import static burp.api.montoya.http.handler.RequestToBeSentAction.continueWith;
 import static burp.api.montoya.http.handler.ResponseReceivedAction.continueWith;
 
 import static burp.api.montoya.core.ToolType.EXTENSIONS;
+import burp.api.montoya.core.ToolType;
 
-public class CstcHttpHandler implements HttpHandler {
+public class    CstcHttpHandler implements HttpHandler {
 
     private View view;
 
@@ -30,6 +31,14 @@ public class CstcHttpHandler implements HttpHandler {
         if(requestToBeSent.toolSource().isFromTool(EXTENSIONS) && requestToBeSent.hasHeader("X-CSTC-79301f837932346cb067c568e27369bf")) {
             HttpRequest request = requestToBeSent.withRemovedHeader("X-CSTC-79301f837932346cb067c568e27369bf");
             return continueWith(request, Annotations.annotations("CSTC"));
+        }
+
+        // If request from repeater tab will be add X-Repeater header
+        if(requestToBeSent.toolSource().isFromTool(ToolType.REPEATER)) {
+            HttpRequest requestMofied = requestToBeSent.withAddedHeader("X-Repeater", "true");
+            ByteArray request = requestMofied.toByteArray();
+            ByteArray modifiedRequest = view.getOutgoingRecipePanel().bake(request, null);
+            return continueWith(HttpRequest.httpRequest(modifiedRequest).withService(requestToBeSent.httpService()));
         }
 
         if (BurpUtils.getInstance().getFilterState().shouldProcess(FilterState.BurpOperation.OUTGOING, requestToBeSent.toolSource().toolType())) {

@@ -1,6 +1,9 @@
 package de.usd.cstchef.operations.vietjetair;
 
 import burp.api.montoya.core.ByteArray;
+import burp.api.montoya.ui.editor.extension.EditorCreationContext;
+import burp.api.montoya.ui.editor.extension.ExtensionProvidedHttpRequestEditor;
+import burp.api.montoya.ui.editor.extension.HttpRequestEditorProvider;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.usd.cstchef.operations.Operation.OperationInfos;
@@ -25,6 +28,8 @@ public class BodyEncryptor extends KeystoreOperation {
     protected String algorithm = "RSA";
     protected String publicKeyString;
     private String lastSelection = "PEM";
+
+    EditorCreationContext editorCreationContext;
     public BodyEncryptor() {
         super();
         this.createUIForPEM();
@@ -42,10 +47,10 @@ public class BodyEncryptor extends KeystoreOperation {
     }
 
     public static String encryptJsonToBase64(String jsonDataStr, String publicKeyPem) throws Exception {
-        String cleanPem = publicKeyPem
-                .replace("-----BEGIN PUBLIC KEY-----", "")
-                .replace("-----END PUBLIC KEY-----", "")
-                .replaceAll("\\s+", "");
+        String cleanPem = publicKeyPem.replace("-----BEGIN PUBLIC KEY-----", "");
+        cleanPem = cleanPem.replace("-----END PUBLIC KEY-----", "");
+        cleanPem = cleanPem.replaceAll("\\s+", "");
+
         byte[] keyBytes = Base64.getDecoder().decode(cleanPem);
         X509EncodedKeySpec keySpec = new X509EncodedKeySpec(keyBytes);
         KeyFactory keyFactory = KeyFactory.getInstance("RSA");
@@ -153,4 +158,5 @@ public class BodyEncryptor extends KeystoreOperation {
         }
         super.load(parameters);
     }
+
 }
