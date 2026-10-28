@@ -43,6 +43,12 @@ Trong đó, chỉ cần một input là domain muốn thực hiện mã hóa bod
 6. Dump json object ra string và đem đi mã hóa với public key. Lưu ý: Do server đang chạy Javascript nên custom lại json một số trường: `None -> rỗng`
 7. Gán lại body rồi forward request đi và nhận response.
 
+### Config Burp Replace
+```
+Find: e.data={encrypted:.*.encrypt(JSON.stringify(e.data),"base64")}
+Replace: e.data=e.data
+```
+
 ### TODO
 - Thêm operator để detect request đến từ Repeater Tab mục đích giảm nhẹ việc phải đổi requestId và tính lại hash cho tất cả các request đi qua Proxy Tab.
 ![img.png](media/vjapi/detect_repeater.png)
